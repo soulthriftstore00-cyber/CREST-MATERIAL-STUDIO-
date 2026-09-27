@@ -1,4 +1,3 @@
-```tsx
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 
@@ -10,7 +9,9 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "CREST Management Sign In" },
+      {
+        title: "CREST Management Sign In",
+      },
       {
         name: "description",
         content: "Secure CREST catalogue management.",
@@ -61,42 +62,42 @@ function AdminLogin() {
       }
 
       if (mode === "signin") {
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const result = await supabase.auth.signInWithPassword({
           email,
           password,
         });
 
-        if (error) {
-          setError(error.message);
+        if (result.error) {
+          setError(result.error.message);
           return;
         }
 
-        if (data.session) {
+        if (result.data.session) {
           navigate({ to: "/manage" });
         }
 
         return;
       }
 
-      const { data, error } = await supabase.auth.signUp({
+      const result = await supabase.auth.signUp({
         email,
         password,
       });
 
-      if (error) {
-        setError(error.message);
+      if (result.error) {
+        setError(result.error.message);
         return;
       }
 
-      if (data.session) {
+      if (result.data.session) {
         navigate({ to: "/manage" });
       } else {
         setError(
           "Account created. Please check your email to confirm your account.",
         );
       }
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
@@ -110,22 +111,29 @@ function AdminLogin() {
     try {
       sessionStorage.setItem("crest_auth_next", "/manage");
 
-      const { error } = await supabase.auth.signInWithOAuth({
+      const result = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 
-      if (error) {
-        setError(error.message);
+      if (result.error) {
+        setError(result.error.message);
       }
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       setError("Unable to continue with Google.");
     } finally {
       setLoading(false);
     }
+  }
+
+  function toggleMode() {
+    setError("");
+    setMode((current) =>
+      current === "signin" ? "signup" : "signin",
+    );
   }
 
   return (
@@ -165,17 +173,19 @@ function AdminLogin() {
             minLength={8}
             required
             autoComplete={
-              mode === "signin" ? "current-password" : "new-password"
+              mode === "signin"
+                ? "current-password"
+                : "new-password"
             }
             placeholder="Password"
             className="h-12 border-primary-foreground/30 text-primary-foreground placeholder:text-primary-foreground/40"
           />
 
-          {error && (
+          {error ? (
             <p className="text-xs leading-5 text-secondary">
               {error}
             </p>
-          )}
+          ) : null}
 
           <Button type="submit" disabled={loading}>
             {loading
@@ -188,9 +198,11 @@ function AdminLogin() {
 
         <div className="my-6 flex items-center gap-4">
           <div className="h-px flex-1 bg-primary-foreground/15" />
+
           <span className="text-[10px] uppercase tracking-[0.16em] text-primary-foreground/40">
             or
           </span>
+
           <div className="h-px flex-1 bg-primary-foreground/15" />
         </div>
 
@@ -207,10 +219,7 @@ function AdminLogin() {
         <button
           type="button"
           className="mt-6 text-xs underline underline-offset-4"
-          onClick={() => {
-            setError("");
-            setMode(mode === "signin" ? "signup" : "signin");
-          }}
+          onClick={toggleMode}
         >
           {mode === "signin"
             ? "Create an account"
@@ -220,4 +229,3 @@ function AdminLogin() {
     </main>
   );
 }
-```
