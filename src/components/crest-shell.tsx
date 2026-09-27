@@ -1,6 +1,12 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, Search, X, ArrowUpRight } from "lucide-react";
+import {
+  ArrowUpRight,
+  Menu,
+  Search,
+  X,
+} from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
+
 import logoAsset from "@/assets/crest-logo.jpeg.asset.json";
 import { Button } from "@/components/ui/button";
 
@@ -13,73 +19,111 @@ const nav = [
   ["Contact", "/contact"],
 ] as const;
 
+type CrestShellProps = {
+  children: ReactNode;
+  darkHeader?: boolean;
+  overlayHeader?: boolean;
+};
+
 export function CrestShell({
   children,
   darkHeader = false,
   overlayHeader = false,
-}: {
-  children: ReactNode;
-  darkHeader?: boolean;
-  overlayHeader?: boolean;
-}) {
+}: CrestShellProps) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    if (!overlayHeader) return;
+    if (!overlayHeader) {
+      return;
+    }
 
-    const onScroll = () => {
+    const handleScroll = () => {
       setScrolled(window.scrollY > 40);
     };
 
-    onScroll();
+    handleScroll();
 
-    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
 
     return () => {
-      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [overlayHeader]);
 
-  const isDark = darkHeader || overlayHeader;
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
 
-  const headerClass = isDark
-    ? "text-primary-foreground"
-    : "text-foreground";
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    };
 
-  const backgroundClass = overlayHeader
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [open]);
+
+  const darkMode = darkHeader || overlayHeader;
+
+  const headerPosition = overlayHeader
+    ? "fixed"
+    : "relative";
+
+  const headerBackground = overlayHeader
     ? scrolled
       ? "bg-charcoal/95 backdrop-blur-xl"
-      : "bg-charcoal/25 backdrop-blur-[2px]"
+      : "bg-charcoal/30 backdrop-blur-sm"
     : darkHeader
       ? "bg-charcoal"
       : "bg-background";
 
-  const borderClass = isDark
+  const headerText = darkMode
+    ? "text-primary-foreground"
+    : "text-foreground";
+
+  const headerBorder = darkMode
     ? "border-primary-foreground/15"
     : "border-border";
 
-  const iconButtonClass = isDark
-    ? "text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
-    : "text-foreground hover:bg-foreground/5 hover:text-foreground";
+  const iconButton =
+    darkMode
+      ? "text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+      : "text-foreground hover:bg-foreground/5 hover:text-foreground";
 
   return (
     <div className="min-h-screen bg-background">
-      {/* HEADER */}
+      {/* =========================================================
+          HEADER
+      ========================================================= */}
       <header
         className={`
-          ${overlayHeader ? "fixed" : "relative"}
-          inset-x-0 top-0 z-50 h-20
+          ${headerPosition}
+          inset-x-0
+          top-0
+          z-50
+          h-20
           border-b
-          transition-all duration-500
-          ${headerClass}
-          ${backgroundClass}
-          ${borderClass}
+          ${headerBackground}
+          ${headerBorder}
+          ${headerText}
+          transition-all
+          duration-500
         `}
       >
         <div
           className="
-            mx-auto grid h-full max-w-[1600px]
+            mx-auto
+            grid
+            h-full
+            max-w-[1600px]
             grid-cols-[1fr_auto]
             items-center
             gap-4
@@ -88,52 +132,59 @@ export function CrestShell({
             lg:px-10
           "
         >
-          {/* LOGO */}
+          {/* =====================================================
+              LOGO
+          ===================================================== */}
           <Link
             to="/"
             aria-label="CREST home"
-            className="group relative z-10 flex w-fit items-center"
+            className="group flex w-fit items-center"
           >
             <img
               src={logoAsset.url}
               alt="CREST"
               className={`
-                h-10 w-auto max-w-32
+                h-10
+                w-auto
+                max-w-32
                 object-contain
-                transition-all duration-500
+                transition-all
+                duration-500
                 ${
-                  isDark
+                  darkMode
                     ? "brightness-0 invert"
                     : "brightness-100"
                 }
               `}
             />
 
-            {/* subtle logo line */}
             <span
               className={`
-                ml-3 hidden h-px w-8 transition-all duration-500
+                ml-3
+                hidden
+                h-px
+                transition-all
+                duration-500
+                group-hover:w-12
                 lg:block
                 ${
-                  isDark
-                    ? "bg-primary-foreground/30 group-hover:w-12"
-                    : "bg-foreground/20 group-hover:w-12"
+                  darkMode
+                    ? "w-8 bg-primary-foreground/30"
+                    : "w-8 bg-foreground/20"
                 }
               `}
             />
           </Link>
 
-          {/* DESKTOP NAVIGATION */}
+          {/* =====================================================
+              DESKTOP NAVIGATION
+          ===================================================== */}
           <nav
             className="
               hidden
               items-center
               justify-center
               gap-7
-              text-[9px]
-              font-semibold
-              uppercase
-              tracking-[0.16em]
               lg:flex
             "
           >
@@ -141,21 +192,19 @@ export function CrestShell({
               <Link
                 key={`${label}-${to}`}
                 to={to}
-                activeProps={{
-                  className: "opacity-100",
-                }}
                 className={`
-                  group relative
+                  group
+                  relative
                   py-3
+                  text-[9px]
+                  font-semibold
+                  uppercase
+                  tracking-[0.16em]
                   opacity-70
-                  transition-all
+                  transition-opacity
                   duration-300
                   hover:opacity-100
-                  ${
-                    isDark
-                      ? "text-primary-foreground"
-                      : "text-foreground"
-                  }
+                  ${headerText}
                 `}
               >
                 {label}
@@ -172,7 +221,7 @@ export function CrestShell({
                     duration-500
                     group-hover:scale-x-100
                     ${
-                      isDark
+                      darkMode
                         ? "bg-primary-foreground"
                         : "bg-foreground"
                     }
@@ -182,17 +231,20 @@ export function CrestShell({
             ))}
           </nav>
 
-          {/* RIGHT CONTROLS */}
-          <div className="flex shrink-0 items-center justify-end gap-1">
-            {/* SEARCH */}
+          {/* =====================================================
+              HEADER ACTIONS
+          ===================================================== */}
+          <div className="flex items-center justify-end gap-1">
+            {/* Search */}
             <Button
               asChild
               variant="ghost"
               size="icon"
               className={`
-                h-10 w-10
+                h-10
+                w-10
                 rounded-none
-                ${iconButtonClass}
+                ${iconButton}
               `}
             >
               <Link
@@ -207,20 +259,92 @@ export function CrestShell({
               </Link>
             </Button>
 
-            {/* MENU */}
+            {/* Desktop menu */}
+            <button
+              type="button"
+              onClick={() => setOpen((value) => !value)}
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              className={`
+                hidden
+                items-center
+                gap-3
+                px-3
+                py-2
+                text-[9px]
+                font-semibold
+                uppercase
+                tracking-[0.16em]
+                transition-opacity
+                duration-300
+                hover:opacity-60
+                lg:flex
+                ${headerText}
+              `}
+            >
+              <span>
+                {open ? "Close" : "Menu"}
+              </span>
+
+              <span className="flex w-4 flex-col gap-[4px]">
+                <span
+                  className={`
+                    block
+                    h-px
+                    w-full
+                    transition-transform
+                    duration-300
+                    ${
+                      open
+                        ? "translate-y-[2.5px] rotate-45"
+                        : ""
+                    }
+                    ${
+                      darkMode
+                        ? "bg-primary-foreground"
+                        : "bg-foreground"
+                    }
+                  `}
+                />
+
+                <span
+                  className={`
+                    block
+                    h-px
+                    w-full
+                    transition-transform
+                    duration-300
+                    ${
+                      open
+                        ? "-translate-y-[2.5px] -rotate-45"
+                        : ""
+                    }
+                    ${
+                      darkMode
+                        ? "bg-primary-foreground"
+                        : "bg-foreground"
+                    }
+                  `}
+                />
+              </span>
+            </button>
+
+            {/* Mobile menu */}
             <Button
+              type="button"
               variant="ghost"
               size="icon"
               aria-label={
                 open ? "Close menu" : "Open menu"
               }
               aria-expanded={open}
-              onClick={() => setOpen(!open)}
+              onClick={() => setOpen((value) => !value)}
               className={`
-                h-10 w-10
+                h-10
+                w-10
                 rounded-none
-                ${iconButtonClass}
                 lg:hidden
+                ${iconButton}
               `}
             >
               {open ? (
@@ -237,78 +361,12 @@ export function CrestShell({
                 />
               )}
             </Button>
-
-            {/* DESKTOP MENU LABEL */}
-            <button
-              type="button"
-              onClick={() => setOpen(!open)}
-              className={`
-                hidden
-                items-center
-                gap-2
-                px-3
-                py-2
-                text-[9px]
-                font-semibold
-                uppercase
-                tracking-[0.16em]
-                transition-opacity
-                hover:opacity-60
-                lg:flex
-                ${
-                  isDark
-                    ? "text-primary-foreground"
-                    : "text-foreground"
-                }
-              `}
-              aria-label={
-                open ? "Close menu" : "Open menu"
-              }
-            >
-              <span>
-                {open ? "Close" : "Menu"}
-              </span>
-
-              <span className="flex w-4 flex-col gap-[4px]">
-                <span
-                  className={`
-                    h-px w-full
-                    transition-transform duration-300
-                    ${
-                      open
-                        ? "translate-y-[2.5px] rotate-45"
-                        : ""
-                    }
-                    ${
-                      isDark
-                        ? "bg-primary-foreground"
-                        : "bg-foreground"
-                    }
-                  `}
-                />
-
-                <span
-                  className={`
-                    h-px w-full
-                    transition-transform duration-300
-                    ${
-                      open
-                        ? "-translate-y-[2.5px] -rotate-45"
-                        : ""
-                    }
-                    ${
-                      isDark
-                        ? "bg-primary-foreground"
-                        : "bg-foreground"
-                    }
-                  `}
-                />
-              </span>
-            </button>
           </div>
         </div>
 
-        {/* MOBILE MENU */}
+        {/* =======================================================
+            MOBILE MENU
+        ======================================================= */}
         {open && (
           <div
             className="
@@ -316,11 +374,12 @@ export function CrestShell({
               inset-x-0
               top-20
               min-h-[calc(100svh-5rem)]
+              overflow-y-auto
               border-t
               border-primary-foreground/15
               bg-charcoal
               px-6
-              py-12
+              py-10
               text-primary-foreground
               lg:hidden
             "
@@ -330,13 +389,13 @@ export function CrestShell({
                 Navigate
               </p>
 
-              <span className="text-[9px] uppercase tracking-[0.14em] text-primary-foreground/35">
+              <span className="text-[9px] uppercase tracking-[0.14em] text-primary-foreground/30">
                 CREST
               </span>
             </div>
 
             <nav className="grid gap-5">
-              {nav.map(([label, to], i) => (
+              {nav.map(([label, to], index) => (
                 <Link
                   key={`${label}-${to}`}
                   to={to}
@@ -351,15 +410,20 @@ export function CrestShell({
                     pb-5
                     font-serif
                     text-4xl
+                    text-primary-foreground
                     transition-opacity
+                    duration-300
                     hover:opacity-60
                   "
                 >
                   <span>{label}</span>
 
                   <span className="flex items-center gap-3 font-sans text-[9px] text-primary-foreground/35">
-                    0{i + 1}
-                    <ArrowUpRight size={13} />
+                    {"0" + (index + 1)}
+                    <ArrowUpRight
+                      size={13}
+                      strokeWidth={1.5}
+                    />
                   </span>
                 </Link>
               ))}
@@ -378,37 +442,85 @@ export function CrestShell({
         )}
       </header>
 
-      {/* PAGE */}
+      {/* =========================================================
+          PAGE CONTENT
+      ========================================================= */}
       {children}
 
-      {/* FOOTER */}
+      {/* =========================================================
+          FOOTER
+      ========================================================= */}
       <footer className="border-t bg-background px-5 py-12 lg:px-10">
-        <div className="mx-auto grid max-w-[1600px] gap-10 lg:grid-cols-[1fr_auto_1fr] lg:items-center">
+        <div
+          className="
+            mx-auto
+            grid
+            max-w-[1600px]
+            gap-10
+            lg:grid-cols-[1fr_auto_1fr]
+            lg:items-center
+          "
+        >
           <Link to="/" aria-label="CREST home">
             <img
               src={logoAsset.url}
               alt="CREST"
-              className="h-10 w-auto max-w-28 object-contain"
+              className="
+                h-10
+                w-auto
+                max-w-28
+                object-contain
+              "
             />
           </Link>
 
-          <nav className="flex flex-wrap gap-x-6 gap-y-3 text-[9px] font-semibold uppercase tracking-[.14em]">
+          <nav
+            className="
+              flex
+              flex-wrap
+              gap-x-6
+              gap-y-3
+              text-[9px]
+              font-semibold
+              uppercase
+              tracking-[0.14em]
+            "
+          >
             {nav.map(([label, to]) => (
               <Link
                 key={`${label}-footer`}
                 to={to}
-                className="transition-opacity hover:opacity-50"
+                className="
+                  transition-opacity
+                  duration-300
+                  hover:opacity-50
+                "
               >
                 {label}
               </Link>
             ))}
           </nav>
 
-          <div className="flex flex-wrap gap-5 text-[9px] uppercase tracking-[.14em] lg:justify-end">
+          <div
+            className="
+              flex
+              flex-wrap
+              gap-5
+              text-[9px]
+              uppercase
+              tracking-[0.14em]
+              lg:justify-end
+            "
+          >
             <span>Hyderabad · Pan-India</span>
+
             <Link
               to="/admin"
-              className="transition-opacity hover:opacity-50"
+              className="
+                transition-opacity
+                duration-300
+                hover:opacity-50
+              "
             >
               Admin
             </Link>
@@ -416,7 +528,9 @@ export function CrestShell({
         </div>
       </footer>
 
-      {/* MOBILE ACTION BAR */}
+      {/* =========================================================
+          MOBILE BOTTOM ACTIONS
+      ========================================================= */}
       <div
         className="
           fixed
@@ -435,15 +549,24 @@ export function CrestShell({
         <Button
           asChild
           variant="inverse"
-          className="rounded-none border-0"
+          className="
+            rounded-none
+            border-0
+          "
         >
-          <Link to="/contact">Enquire</Link>
+          <Link to="/contact">
+            Enquire
+          </Link>
         </Button>
 
         <Button
           asChild
           variant="inverse"
-          className="rounded-none border-y-0 border-r-0"
+          className="
+            rounded-none
+            border-y-0
+            border-r-0
+          "
         >
           <a
             href="https://wa.me/"
@@ -456,4 +579,69 @@ export function CrestShell({
       </div>
     </div>
   );
-}x-w-[1600px]"><div className="mb-10 flex items-center gap-4 text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground"><p>{eyebrow}</p><span className="h-px w-12 bg-border"/></div><div className="grid gap-10 lg:grid-cols-[1.65fr_.65fr] lg:items-end"><h1 className="max-w-5xl text-6xl leading-[.86] sm:text-8xl lg:text-[7.75rem]">{title}</h1><p className="max-w-md text-sm leading-7 text-muted-foreground">{copy}</p></div></div></section> }
+}
+
+/* ===============================================================
+   PAGE INTRO
+=============================================================== */
+
+export function PageIntro({
+  eyebrow,
+  title,
+  copy,
+}: {
+  eyebrow: string;
+  title: string;
+  copy: string;
+}) {
+  return (
+    <section className="border-b bg-background px-5 pb-16 pt-32 lg:px-10 lg:pb-24 lg:pt-40">
+      <div
+        className="
+          mx-auto
+          grid
+          max-w-[1600px]
+          gap-8
+          lg:grid-cols-[1.3fr_.7fr]
+          lg:items-end
+        "
+      >
+        <div>
+          <div className="mb-6 flex items-center gap-3">
+            <span className="text-[9px] font-semibold uppercase tracking-[0.18em]">
+              {eyebrow}
+            </span>
+
+            <span className="h-px w-12 bg-border" />
+          </div>
+
+          <h1
+            className="
+              max-w-5xl
+              font-serif
+              text-6xl
+              leading-[0.88]
+              tracking-[-0.03em]
+              sm:text-7xl
+              lg:text-[7rem]
+            "
+          >
+            {title}
+          </h1>
+        </div>
+
+        <p
+          className="
+            max-w-md
+            text-xs
+            leading-6
+            text-muted-foreground
+            lg:pb-2
+          "
+        >
+          {copy}
+        </p>
+      </div>
+    </section>
+  );
+}
