@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1790161766398,
+      "tag": "0000_create_crest_catalogue",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790161799580,
+      "tag": "0001_secure_crest_media",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790162017912,
+      "tag": "0002_add_initial_admin_setup",
+      "breakpoints": true
+    }
+  ]
+}

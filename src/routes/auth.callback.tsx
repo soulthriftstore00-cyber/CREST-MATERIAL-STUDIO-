@@ -1,0 +1,5 @@
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+export const Route=createFileRoute("/auth/callback")({ssr:false,head:()=>({meta:[{title:"Signing in | CREST"},{name:"description",content:"Completing secure CREST management sign in."},{property:"og:title",content:"CREST Sign In"},{property:"og:description",content:"Secure management access."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary"}]}),component:Callback});
+function Callback(){const navigate=useNavigate();useEffect(()=>{supabase.auth.getUser().then(({data})=>navigate({to:data.user?"/manage":"/admin"}))},[navigate]);return <main className="grid min-h-screen place-items-center bg-charcoal text-primary-foreground"><p className="text-xs uppercase tracking-[.16em]">Signing you in…</p></main>}

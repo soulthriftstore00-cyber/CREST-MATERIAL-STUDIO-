@@ -1,0 +1,11 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { Search, SlidersHorizontal } from "lucide-react";
+import { useMemo, useState } from "react";
+import { CrestShell, PageIntro } from "@/components/crest-shell";
+import { ProductCard } from "@/components/product-card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { categories, products } from "@/lib/crest-data";
+
+export const Route=createFileRoute("/products/")({head:()=>({meta:[{title:"Products | CREST"},{name:"description",content:"Explore CREST veneers, laminates, plywood, fluted panels and louvers."},{property:"og:title",content:"Explore the CREST collection"},{property:"og:description",content:"Premium architectural surface materials."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}]}),component:Products});
+function Products(){const [query,setQuery]=useState("");const [category,setCategory]=useState("All");const filtered=useMemo(()=>products.filter(p=>(category==="All"||p.category===category)&&`${p.name} ${p.code} ${p.colour} ${p.finish}`.toLowerCase().includes(query.toLowerCase())),[query,category]);return <CrestShell><PageIntro eyebrow="The collection" title="Explore the CREST collection." copy="Search by material, tone, finish or product code. Every surface is selected for architectural clarity and lasting performance."/><main className="mx-auto max-w-[1600px] px-5 py-14 lg:px-10"><div className="mb-12 grid gap-5 border-y py-5 lg:grid-cols-[1fr_auto]"><label className="flex items-center gap-3"><Search size={17}/><span className="sr-only">Search products</span><Input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search products, colours, finishes, textures, codes…" className="h-12 border-0 shadow-none focus-visible:ring-0"/></label><div className="flex gap-2 overflow-x-auto">{["All",...categories].map(c=><Button key={c} variant={category===c?"default":"ghost"} onClick={()=>setCategory(c)}><SlidersHorizontal className={c==="All"?"inline":"hidden"}/>{c}</Button>)}</div></div><p className="mb-8 text-[10px] uppercase tracking-[.14em] text-muted-foreground">{filtered.length} surfaces</p><div className="grid gap-x-5 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">{filtered.map(p=><ProductCard key={p.slug} product={p}/>)}</div></main></CrestShell>}
