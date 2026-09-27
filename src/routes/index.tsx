@@ -1,44 +1,553 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  MousePointer2,
+} from "lucide-react";
 import { useEffect, useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { CrestShell } from "@/components/crest-shell";
-import { categories, images, products } from "@/lib/crest-data";
+import { images } from "@/lib/crest-data";
 
 export const Route = createFileRoute("/")({
-  head:()=>({meta:[{title:"CREST | Premium Architectural Surfaces Hyderabad"},{name:"description",content:"Discover premium veneers, laminates, plywood, fluted panels and louvers from CREST Hyderabad."},{property:"og:title",content:"CREST | Surfaces that shape spaces"},{property:"og:description",content:"Premium architectural surface materials for considered interiors."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}]}),
+  head: () => ({
+    meta: [
+      {
+        title: "CREST | Premium Architectural Surfaces Hyderabad",
+      },
+      {
+        name: "description",
+        content:
+          "Discover premium veneers, laminates, plywood, fluted panels and louvers from CREST Hyderabad.",
+      },
+      {
+        property: "og:title",
+        content: "CREST | Surfaces that shape spaces",
+      },
+      {
+        property: "og:description",
+        content:
+          "Premium architectural surface materials for considered interiors.",
+      },
+      {
+        property: "og:type",
+        content: "website",
+      },
+      {
+        name: "twitter:card",
+        content: "summary_large_image",
+      },
+    ],
+  }),
   component: Home,
 });
 
-const materialCopy:Record<string,string>={Veneers:"Natural / Textured / Timeless",Laminates:"Durable / Refined / Versatile",Plywood:"Strong / Flexible / Reliable","Fluted Panels":"Rhythm / Shadow / Dimension",Louvers:"Light / Rhythm / Structure"};
-const heroStories=[
-  {label:"Natural oak veneer",note:"Timeless textures. Endless possibilities.",image:images.hero},
-  {label:"Refined laminates",note:"Quiet surfaces for modern interiors.",image:images.library},
-  {label:"Architectural plywood",note:"Strength, warmth and honest construction.",image:images.library},
-  {label:"Fluted wall panels",note:"Rhythm shaped by shadow and light.",image:images.application},
-  {label:"Linear louvers",note:"Structure with natural depth.",image:images.showroom},
+const heroStories = [
+  {
+    number: "01",
+    category: "Natural Veneer",
+    title: "Natural oak.",
+    subtitle: "Timeless grain.",
+    description:
+      "A warm, tactile surface where natural grain becomes part of the architecture.",
+    image: images.hero,
+  },
+  {
+    number: "02",
+    category: "Material Library",
+    title: "Quiet surfaces.",
+    subtitle: "Considered spaces.",
+    description:
+      "Refined materials selected for interiors that value texture, tone and restraint.",
+    image: images.library,
+  },
+  {
+    number: "03",
+    category: "Architectural Surface",
+    title: "Honest material.",
+    subtitle: "Built to last.",
+    description:
+      "Surfaces that bring warmth, structure and depth to contemporary architecture.",
+    image: images.application,
+  },
+  {
+    number: "04",
+    category: "Interior Detail",
+    title: "Light meets texture.",
+    subtitle: "Depth in every detail.",
+    description:
+      "Watch light move across grain, shadow and architectural rhythm.",
+    image: images.showroom,
+  },
+  {
+    number: "05",
+    category: "Material Experience",
+    title: "Made for spaces.",
+    subtitle: "Designed to be felt.",
+    description:
+      "Explore a curated collection of surfaces for residential, hospitality and commercial interiors.",
+    image: images.hero,
+  },
 ];
-const storyFrames=["Close-up","Material","Furniture","Wall","Architecture"];
 
-function Home(){const [active,setActive]=useState(0);useEffect(()=>{const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;if(reduced)return;const timer=window.setInterval(()=>setActive(v=>(v+1)%heroStories.length),6500);return()=>window.clearInterval(timer)},[]);const hero=heroStories[active] ?? heroStories[0]!;return <CrestShell darkHeader overlayHeader>
-  <main>
-    <section className="relative min-h-svh overflow-hidden bg-charcoal text-primary-foreground">
-      {heroStories.map((story,i)=><img key={story.label} src={story.image} alt={story.label} width={1920} height={1080} fetchPriority={i===0?"high":"auto"} className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-1000 ${active===i?"scale-100 opacity-80":"scale-[1.035] opacity-0"}`}/>)}
-      <div className="absolute inset-0 bg-charcoal/35"/>
-      <div className="relative mx-auto flex min-h-svh max-w-[1600px] flex-col justify-end px-5 pb-8 pt-32 lg:px-10 lg:pb-8">
-        <div className="mb-auto pt-[10vh]"><p className="editorial-reveal text-[9px] font-semibold uppercase tracking-[0.2em]">Premium architectural surfaces</p><h1 className="editorial-reveal mt-5 max-w-2xl text-6xl uppercase leading-[.82] sm:text-8xl lg:text-[6.5rem]">Surfaces<br/>that shape<br/>spaces.</h1><p className="mt-5 text-[9px] uppercase tracking-[0.15em]">Veneers · Laminates · Plywood · Fluted Panels · Louvers</p><div className="mt-7 flex flex-wrap gap-3"><Button asChild><Link to="/products">Explore materials <ArrowRight/></Link></Button><Button asChild variant="inverse"><Link to="/contact">Visit showroom <ArrowRight/></Link></Button></div></div>
-        <div className="grid items-end gap-7 border-t border-primary-foreground/20 pt-5 sm:grid-cols-[1fr_auto]">
-          <div className="max-w-sm"><p className="text-[9px] uppercase tracking-[.16em] text-primary-foreground/60">{hero.label}</p><p className="mt-2 font-serif text-xl">{hero.note}</p></div>
-          <div className="flex items-center gap-4"><span className="text-[9px] tabular-nums">0{active+1} / 05</span><div className="h-px w-24 bg-primary-foreground/30"><div className="h-px bg-primary-foreground transition-[width] duration-700" style={{width:`${(active+1)*20}%`}}/></div><Button variant="ghost" size="icon" onClick={()=>setActive((active+4)%5)} aria-label="Previous material"><ChevronLeft/></Button><Button variant="ghost" size="icon" onClick={()=>setActive((active+1)%5)} aria-label="Next material"><ChevronRight/></Button></div>
-        </div>
-      </div>
-    </section>
-    <section id="materials" className="px-5 py-20 lg:px-10 lg:py-24"><div className="mx-auto max-w-[1600px]"><div className="mb-10 flex items-end justify-between gap-8"><div><div className="mb-4 flex items-center gap-3 text-[9px] uppercase tracking-[.16em]"><span>Materials</span><span className="h-px w-12 bg-border"/></div><h2 className="text-5xl leading-[.92] sm:text-6xl">Materials for<br/>modern spaces.</h2></div><Link to="/products" className="hidden items-center gap-2 border-b pb-2 text-[9px] uppercase tracking-[.14em] sm:flex">Explore all materials <ArrowRight size={13}/></Link></div><div className="flex snap-x gap-1 overflow-x-auto pb-3 lg:grid lg:grid-cols-5">{categories.map((c,i)=><Link to="/products" key={c} className="material-grain group relative aspect-[4/5] min-w-[72vw] snap-start overflow-hidden bg-charcoal sm:min-w-[310px] lg:min-w-0"><img src={[images.hero,images.library,images.library,images.application,images.showroom][i]} alt={`${c} material texture`} loading="lazy" width={1920} height={1080} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"/><div className="absolute inset-0 bg-charcoal/30 transition-colors group-hover:bg-charcoal/20"/><div className="absolute inset-x-5 bottom-5 text-primary-foreground"><div className="flex items-end justify-between"><div><span className="text-[10px] font-semibold uppercase tracking-[.12em]">{c}</span><p className="mt-1 text-[8px] text-primary-foreground/65">{materialCopy[c]}</p></div><ArrowRight className="transition-transform duration-500 group-hover:translate-x-1" size={14}/></div></div></Link>)}</div></div></section>
-    <section className="border-y px-5 py-20 lg:px-10 lg:py-24"><div className="mx-auto grid max-w-[1600px] gap-10 lg:grid-cols-[.55fr_1.7fr]"><div className="lg:sticky lg:top-28 lg:self-start"><div className="mb-4 flex items-center gap-3 text-[9px] uppercase tracking-[.16em]"><span>Featured products</span><span className="h-px w-12 bg-border"/></div><h2 className="text-5xl leading-[.92]">Curated for<br/>distinctive spaces.</h2><p className="mt-6 max-w-xs text-xs leading-6 text-muted-foreground">From natural veneers to high-performance laminates, our collection brings together texture, tone and timeless design.</p><Link to="/products" className="mt-7 inline-flex items-center gap-2 border-b pb-2 text-[9px] uppercase tracking-[.14em]">View all products <ArrowRight size={13}/></Link></div><div className="flex snap-x gap-4 overflow-x-auto lg:grid lg:grid-cols-3">{products.slice(0,3).map((p,i)=><Link key={p.slug} to="/products/$slug" params={{slug:p.slug}} className="group min-w-[78vw] snap-start sm:min-w-[360px] lg:min-w-0"><div className="relative aspect-[4/3] overflow-hidden bg-muted"><span className="absolute left-3 top-3 z-10 text-[9px] text-primary-foreground">0{i+1}</span><img src={p.image} alt={p.name} loading="lazy" width={1920} height={1080} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"/></div><div className="grid grid-cols-[1fr_auto] gap-3 border-b px-3 py-4"><div><h3 className="font-sans text-[10px] font-semibold uppercase tracking-[.1em]">{p.name}</h3><p className="mt-2 text-[8px] leading-4 text-muted-foreground">{p.category} · {p.code}<br/>{p.finish} · {p.thickness}</p></div><ArrowRight className="mt-1 transition-transform group-hover:translate-x-1" size={13}/></div></Link>)}</div></div></section>
-    <section className="bg-charcoal px-5 py-16 text-primary-foreground lg:px-10 lg:py-20"><div className="mx-auto grid max-w-[1600px] gap-10 lg:grid-cols-[.55fr_1.65fr]"><div className="lg:sticky lg:top-28 lg:self-start"><p className="mb-5 text-[9px] uppercase tracking-[.18em] text-primary-foreground/55">Material story · 01/05</p><h2 className="text-5xl leading-[.92] sm:text-6xl">Grain becomes<br/>architecture.</h2><p className="mt-6 max-w-xs text-xs leading-6 text-primary-foreground/60">From the forest to your space, wood's natural beauty is more than a finish — it is a foundation for inspired design.</p></div><div className="flex snap-x gap-2 overflow-x-auto">{storyFrames.map((frame,i)=><article key={frame} className="group relative aspect-[3/4] min-w-[68vw] snap-start overflow-hidden sm:min-w-[280px]"><img src={[images.hero,images.library,images.application,images.showroom,images.application][i]} alt={`${frame} material story`} loading="lazy" width={1920} height={1080} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"/><div className="absolute inset-0 bg-charcoal/25"/><div className="absolute inset-x-4 bottom-4"><p className="text-[8px] text-primary-foreground/55">0{i+1}</p><p className="mt-2 text-[9px] uppercase tracking-[.14em]">{frame}</p><p className="mt-1 font-serif text-lg">{["The detail.","The essence.","The form.","The ambience.","The scale."][i]}</p></div></article>)}</div></div></section>
-    <section className="px-5 py-16 lg:px-10 lg:py-20"><div className="mx-auto grid max-w-[1600px] gap-10 lg:grid-cols-[.45fr_1.55fr]"><div><p className="mb-5 text-[9px] uppercase tracking-[.16em]">Material & light</p><h2 className="text-5xl leading-[.92]">Material<br/>changes with light.</h2><p className="mt-6 max-w-xs text-xs leading-6 text-muted-foreground">Explore how light transforms texture, reveals depth and brings surfaces to life.</p></div><div className="grid min-h-[520px] grid-cols-2 gap-1 sm:grid-cols-3"><img src={images.hero} alt="Material grain in warm light" loading="lazy" className="h-full w-full object-cover sm:col-span-2"/><img src={images.application} alt="Interior surfaces under soft light" loading="lazy" className="h-full w-full object-cover"/></div></div></section>
-    <section className="bg-charcoal px-5 py-16 text-primary-foreground lg:px-10"><div className="mx-auto grid max-w-[1600px] gap-10 lg:grid-cols-[.45fr_1.55fr]"><div><p className="mb-5 text-[9px] uppercase tracking-[.16em] text-primary-foreground/55">Projects</p><h2 className="text-5xl leading-[.92]">Real spaces.<br/>Lasting impressions.</h2><p className="mt-6 max-w-xs text-xs leading-6 text-primary-foreground/60">Explore materials in thoughtfully crafted residential, hospitality, retail and office spaces.</p><Link to="/projects" className="mt-7 inline-flex items-center gap-2 border-b border-primary-foreground/30 pb-2 text-[9px] uppercase tracking-[.14em]">View all projects <ArrowRight size={13}/></Link></div><Link to="/projects" className="group grid min-h-[420px] overflow-hidden border border-primary-foreground/15 sm:grid-cols-[1.5fr_.5fr]"><div className="relative overflow-hidden"><img src={images.application} alt="CREST surfaces in a residential interior" loading="lazy" className="h-full min-h-[360px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"/><div className="absolute inset-x-5 bottom-5 flex items-end justify-between"><div><p className="text-[8px] uppercase tracking-[.12em]">Residence · Hyderabad</p><p className="mt-2 font-serif text-2xl">Quiet Residence</p></div><span className="text-[9px] uppercase">Explore</span></div></div><div className="grid grid-rows-2 gap-px bg-primary-foreground/15"><img src={images.showroom} alt="CREST showroom detail" loading="lazy" className="h-full w-full object-cover"/><img src={images.library} alt="Material library detail" loading="lazy" className="h-full w-full object-cover"/></div></Link></div></section>
-    <section className="grid border-b lg:grid-cols-[.55fr_1.45fr]"><div className="flex flex-col justify-center px-6 py-16 lg:px-12"><p className="mb-5 text-[9px] uppercase tracking-[.16em]">The CREST showroom</p><h2 className="text-5xl leading-[.92]">See. Feel.<br/>Choose.</h2><p className="mt-6 max-w-sm text-xs leading-6 text-muted-foreground">Experience our collection in person at our Hyderabad showroom. Explore textures, finishes and real applications with our material team.</p><p className="mt-6 flex items-center gap-2 text-[9px] uppercase tracking-[.12em]"><MapPin size={13}/> Hyderabad, Telangana</p></div><div className="grid min-h-[520px] grid-cols-[1.45fr_.55fr]"><img src={images.showroom} alt="CREST architectural surfaces showroom" loading="lazy" className="h-full w-full object-cover"/><div className="grid grid-rows-[1fr_auto] bg-charcoal"><img src={images.library} alt="Material detail at CREST showroom" loading="lazy" className="h-full w-full object-cover"/><div className="grid gap-2 p-5"><Button asChild variant="inverse"><Link to="/contact">Book a visit <ArrowRight/></Link></Button><Button asChild variant="inverse"><Link to="/contact">Get directions <ArrowRight/></Link></Button></div></div></div></section>
-    <section className="relative overflow-hidden bg-charcoal px-5 py-16 text-primary-foreground lg:px-10"><img src={images.hero} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-20 transition-transform duration-1000 hover:scale-[1.03]"/><div className="relative mx-auto grid max-w-[1600px] gap-8 lg:grid-cols-[1fr_auto] lg:items-end"><div><p className="mb-5 text-[9px] uppercase tracking-[.16em]">Let's build together</p><h2 className="text-6xl uppercase leading-none sm:text-8xl">Find your surface.</h2></div><div className="flex flex-wrap gap-3"><Button asChild><Link to="/products">Explore materials <ArrowRight/></Link></Button><Button asChild variant="inverse"><Link to="/contact">Contact us <ArrowRight/></Link></Button></div></div></section>
-  </main>
-</CrestShell>}
+function Home() {
+  const [active, setActive] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const story = heroStories[active] ?? heroStories[0];
+
+  useEffect(() => {
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (reducedMotion || isPaused) {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setActive((current) => (current + 1) % heroStories.length);
+    }, 6500);
+
+    return () => {
+      window.clearInterval(timer);
+    };
+  }, [isPaused]);
+
+  function previous() {
+    setActive(
+      (current) =>
+        (current - 1 + heroStories.length) %
+        heroStories.length,
+    );
+  }
+
+  function next() {
+    setActive(
+      (current) => (current + 1) % heroStories.length,
+    );
+  }
+
+  return (
+    <CrestShell darkHeader overlayHeader>
+      <main className="bg-background">
+        {/* =====================================================
+            PHASE 1 — PREMIUM HERO
+        ===================================================== */}
+        <section
+          className="
+            relative
+            min-h-svh
+            overflow-hidden
+            bg-charcoal
+            text-primary-foreground
+          "
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          {/* ---------------------------------------------------
+              BACKGROUND MATERIAL IMAGES
+          --------------------------------------------------- */}
+          <div className="absolute inset-0">
+            {heroStories.map((item, index) => (
+              <div
+                key={item.number}
+                className={`
+                  absolute
+                  inset-0
+                  transition-opacity
+                  duration-[1200ms]
+                  ease-out
+                  ${
+                    active === index
+                      ? "opacity-100"
+                      : "pointer-events-none opacity-0"
+                  }
+                `}
+              >
+                <img
+                  src={item.image}
+                  alt=""
+                  width={1920}
+                  height={1080}
+                  fetchPriority={
+                    index === 0 ? "high" : "auto"
+                  }
+                  className={`
+                    h-full
+                    w-full
+                    object-cover
+                    transition-transform
+                    duration-[7000ms]
+                    ease-out
+                    ${
+                      active === index
+                        ? "scale-105"
+                        : "scale-100"
+                    }
+                  `}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* ---------------------------------------------------
+              IMAGE TREATMENT
+          --------------------------------------------------- */}
+          <div className="absolute inset-0 bg-charcoal/35" />
+
+          <div
+            className="
+              absolute
+              inset-0
+              bg-gradient-to-r
+              from-charcoal/85
+              via-charcoal/45
+              to-charcoal/10
+            "
+          />
+
+          <div
+            className="
+              absolute
+              inset-0
+              bg-gradient-to-t
+              from-charcoal/80
+              via-transparent
+              to-charcoal/20
+            "
+          />
+
+          {/* subtle material grain */}
+          <div
+            className="
+              pointer-events-none
+              absolute
+              inset-0
+              opacity-[0.06]
+              mix-blend-overlay
+            "
+            style={{
+              backgroundImage:
+                "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E\")",
+            }}
+          />
+
+          {/* ---------------------------------------------------
+              MAIN HERO CONTENT
+          --------------------------------------------------- */}
+          <div
+            className="
+              relative
+              mx-auto
+              flex
+              min-h-svh
+              max-w-[1600px]
+              flex-col
+              justify-end
+              px-5
+              pb-8
+              pt-32
+              lg:px-10
+              lg:pb-8
+            "
+          >
+            {/* top editorial label */}
+            <div className="absolute left-5 top-28 lg:left-10 lg:top-32">
+              <div className="flex items-center gap-3">
+                <span className="h-px w-10 bg-primary-foreground/50" />
+
+                <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-primary-foreground/70">
+                  Material Library
+                </span>
+              </div>
+            </div>
+
+            {/* large editorial title */}
+            <div
+              key={story.number}
+              className="
+                max-w-4xl
+                animate-in
+                fade-in
+                slide-in-from-bottom-4
+                duration-700
+              "
+            >
+              <p className="mb-5 text-[9px] font-semibold uppercase tracking-[0.2em] text-primary-foreground/65">
+                {story.category}
+              </p>
+
+              <h1
+                className="
+                  max-w-4xl
+                  font-serif
+                  text-[4.5rem]
+                  leading-[0.78]
+                  tracking-[-0.04em]
+                  sm:text-[6.5rem]
+                  lg:text-[8.5rem]
+                  xl:text-[9.5rem]
+                "
+              >
+                {story.title}
+                <br />
+                <span className="text-primary-foreground/55">
+                  {story.subtitle}
+                </span>
+              </h1>
+
+              <div className="mt-8 grid max-w-xl gap-6 sm:grid-cols-[1fr_auto] sm:items-end">
+                <p className="max-w-sm text-xs leading-6 text-primary-foreground/65">
+                  {story.description}
+                </p>
+
+                <Button
+                  asChild
+                  className="w-fit"
+                >
+                  <Link to="/products">
+                    Explore materials
+                    <ArrowRight size={15} />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+
+            {/* -------------------------------------------------
+                BOTTOM CONTROL BAR
+            ------------------------------------------------- */}
+            <div
+              className="
+                mt-16
+                grid
+                gap-6
+                border-t
+                border-primary-foreground/20
+                pt-5
+                sm:grid-cols-[1fr_auto]
+                sm:items-end
+              "
+            >
+              {/* material information */}
+              <div>
+                <div className="flex items-center gap-4">
+                  <span className="text-[9px] uppercase tracking-[0.18em] text-primary-foreground/45">
+                    Current material
+                  </span>
+
+                  <span className="h-px w-10 bg-primary-foreground/25" />
+
+                  <span className="text-[9px] uppercase tracking-[0.14em]">
+                    {story.category}
+                  </span>
+                </div>
+
+                <p className="mt-2 font-serif text-xl">
+                  {story.title.replace(".", "")}
+                </p>
+              </div>
+
+              {/* controls */}
+              <div className="flex items-center gap-4">
+                {/* slide counter */}
+                <div className="flex items-center gap-2 text-[9px] tabular-nums">
+                  <span className="text-primary-foreground">
+                    {story.number}
+                  </span>
+
+                  <span className="text-primary-foreground/30">
+                    /
+                  </span>
+
+                  <span className="text-primary-foreground/40">
+                    05
+                  </span>
+                </div>
+
+                {/* progress */}
+                <div className="relative h-px w-24 overflow-hidden bg-primary-foreground/20 sm:w-32">
+                  <div
+                    className="
+                      absolute
+                      inset-y-0
+                      left-0
+                      bg-primary-foreground
+                      transition-all
+                      duration-700
+                    "
+                    style={{
+                      width: `${((active + 1) / heroStories.length) * 100}%`,
+                    }}
+                  />
+                </div>
+
+                {/* previous */}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={previous}
+                  aria-label="Previous material"
+                  className="
+                    h-9
+                    w-9
+                    rounded-none
+                    text-primary-foreground
+                    hover:bg-primary-foreground/10
+                    hover:text-primary-foreground
+                  "
+                >
+                  <ChevronLeft
+                    size={18}
+                    strokeWidth={1.5}
+                  />
+                </Button>
+
+                {/* next */}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={next}
+                  aria-label="Next material"
+                  className="
+                    h-9
+                    w-9
+                    rounded-none
+                    text-primary-foreground
+                    hover:bg-primary-foreground/10
+                    hover:text-primary-foreground
+                  "
+                >
+                  <ChevronRight
+                    size={18}
+                    strokeWidth={1.5}
+                  />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* ---------------------------------------------------
+              SCROLL INDICATOR
+          --------------------------------------------------- */}
+          <div
+            className="
+              absolute
+              bottom-8
+              left-1/2
+              hidden
+              -translate-x-1/2
+              flex-col
+              items-center
+              gap-3
+              lg:flex
+            "
+          >
+            <span className="text-[8px] uppercase tracking-[0.2em] text-primary-foreground/40">
+              Scroll
+            </span>
+
+            <ArrowDown
+              size={14}
+              strokeWidth={1}
+              className="
+                animate-bounce
+                text-primary-foreground/60
+              "
+            />
+          </div>
+
+          {/* ---------------------------------------------------
+              RIGHT VERTICAL LABEL
+          --------------------------------------------------- */}
+          <div
+            className="
+              absolute
+              right-5
+              top-1/2
+              hidden
+              -translate-y-1/2
+              lg:block
+            "
+          >
+            <div className="flex items-center gap-3 [writing-mode:vertical-rl]">
+              <span className="text-[8px] uppercase tracking-[0.2em] text-primary-foreground/40">
+                CREST · Hyderabad
+              </span>
+
+              <span className="h-12 w-px bg-primary-foreground/20" />
+            </div>
+          </div>
+        </section>
+
+        {/* =====================================================
+            SMALL INTRO SECTION
+            Phase 1 continuation
+        ===================================================== */}
+        <section className="border-b bg-background px-5 py-20 lg:px-10 lg:py-28">
+          <div
+            className="
+              mx-auto
+              grid
+              max-w-[1600px]
+              gap-10
+              lg:grid-cols-[0.7fr_1.3fr]
+              lg:items-end
+            "
+          >
+            <div>
+              <div className="mb-5 flex items-center gap-3 text-[9px] uppercase tracking-[0.18em]">
+                <span>CREST</span>
+                <span className="h-px w-10 bg-border" />
+                <span>01</span>
+              </div>
+
+              <p className="font-serif text-3xl leading-[1] sm:text-4xl">
+                Materials with
+                <br />
+                architectural intent.
+              </p>
+            </div>
+
+            <div className="max-w-2xl">
+              <p className="text-sm leading-7 text-muted-foreground">
+                Veneers, laminates, plywood, fluted panels and
+                louvers — curated for architects, designers and
+                makers who believe the surface is part of the
+                space.
+              </p>
+
+              <Link
+                to="/products"
+                className="
+                  mt-8
+                  inline-flex
+                  items-center
+                  gap-2
+                  border-b
+                  border-foreground/30
+                  pb-2
+                  text-[9px]
+                  font-semibold
+                  uppercase
+                  tracking-[0.16em]
+                  transition-all
+                  duration-300
+                  hover:gap-4
+                "
+              >
+                Enter the material library
+                <ArrowRight size={13} />
+              </Link>
+            </div>
+          </div>
+        </section>
+      </main>
+    </CrestShell>
+  );
+}
