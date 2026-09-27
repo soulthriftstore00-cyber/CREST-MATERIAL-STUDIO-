@@ -1,98 +1,148 @@
 # CREST Surfaces
 
-Use the attached CREST logo and the generated website visual reference as the EXACT visual direction.
+Premium architectural surfaces for contemporary interiors.
 
-Rebuild the website with the same premium architectural/editorial aesthetic:
+CREST brings together refined materials, tactile textures and architectural finishes designed to shape sophisticated spaces.
 
-- CREST logo in the top-left
+## Brand & Visual Direction
 
-- black/charcoal navigation
+* CREST logo as the primary brand identity
+* Black and charcoal navigation
+* Warm ivory backgrounds
+* Natural wood, beige, stone and muted green tones
+* Elegant high-end serif typography combined with clean sans-serif typography
+* Large full-bleed material photography
+* Asymmetrical editorial layouts
+* Generous whitespace
+* Thin borders and minimal sharp buttons
+* Premium material texture close-ups
+* Sophisticated architecture and interior-design aesthetic
 
-- warm ivory background
+## Design Principles
 
-- natural wood, beige, stone and muted green tones
+The website should feel:
 
-- elegant high-end serif typography mixed with clean sans-serif
+* Minimal
+* Cinematic
+* Tactile
+* Editorial
+* Architectural
+* Premium
+* Luxurious
 
-- huge full-bleed material photography
+Avoid generic SaaS or ecommerce-template aesthetics.
 
-- asymmetrical editorial layouts
+Do not use:
 
-- large whitespace
+* Gradients
+* Glassmorphism
+* Excessive rounded cards
+* Generic icons
+* Cartoon-style UI
+* Overly dense layouts
 
-- thin borders
+## Motion & Interaction
 
-- minimal sharp buttons
+Use subtle, premium interactions throughout the experience:
 
-- premium material texture close-ups
+* Smooth image reveals
+* Subtle parallax
+* Horizontal material galleries
+* Sticky storytelling sections
+* Gentle image zoom
+* Editorial typography animations
+* Premium page transitions
 
-- sophisticated architecture/interior-design feel
+Animations should feel refined and purposeful rather than excessive.
 
-IMPORTANT:
+## Homepage Flow
 
-Do NOT make it look like an AI/SaaS/ecommerce template.
+### CREST
 
-Do NOT use gradients, glassmorphism, excessive rounded cards, generic icons or cartoonish UI.
+**“Surfaces that shape spaces.”**
 
-Use creative scrolling:
+↓
 
-- smooth image reveals
+### Material Categories
 
-- subtle parallax
+* Veneers
+* Laminates
+* Plywood
+* Fluted Panels
+* Louvers
 
-- horizontal material galleries
+↓
 
-- sticky sections
+### Featured Products
 
-- gentle image zoom
+Showcase selected CREST materials through large editorial imagery and concise product information.
 
-- editorial typography animations
+↓
 
-- premium page transitions
+### Material Detail Storytelling
 
-Homepage visual flow:
+Present materials through close-up textures, applications, specifications and architectural imagery.
 
-CREST
+↓
 
-“Surfaces that shape spaces.”
+### CREST Showroom
 
-→ Material categories
+Create an immersive showroom experience that communicates the physical character of the materials.
 
-→ Veneers / Laminates / Plywood / Fluted Panels / Louvers
+↓
 
-→ Featured products
+### Final CTA
 
-→ Material detail storytelling
+End with a strong dark section and a simple premium call-to-action.
 
-→ CREST showroom
+## Responsive Design
 
-→ Final dark CTA
+Desktop and mobile experiences should both feel intentional and premium.
 
-Keep the design very minimal, cinematic, tactile and luxurious.
-
-The uploaded CREST logo must be used as the actual brand logo, not replaced with a generated logo.
-
-Make desktop and mobile versions feel equally premium.
-
-This project was built with [Lovable](https://lovable.dev).
-
-**Live app**: https://crest-material-studio.lovable.app
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/117367b8-8844-4975-8fe2-1d4e829f08ba).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+Layouts, typography, imagery, navigation and animations should adapt naturally across screen sizes without feeling like a simplified desktop version.
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+This repository is an independent CREST Surfaces website project.
+
+### Install
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+npm install
+```
+
+### Run locally
+
+```sh
+npm run dev
+```
+
+### Build
+
+```sh
+npm run build
+```
+
+### Preview production build
+
+```sh
+npm run preview
+```
+
+## Project Structure
+
+```text
+src/        Application source code
+public/     Static assets
+supabase/   Supabase configuration
+drizzle/    Database configuration
+```
+
+## Brand Goal
+
+CREST should communicate the feeling of premium architectural materials through photography, typography, whitespace, movement and tactile visual storytelling.
+
+**Surfaces that shape spaces.**
+
 npm run dev
 ```
