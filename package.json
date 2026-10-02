@@ -1,4 +1,3 @@
-```json
 {
   "name": "crest-material-studio",
   "private": true,
@@ -92,4 +91,4 @@
     "vite": "8.1.5"
   }
 }
-```
+
