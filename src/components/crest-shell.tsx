@@ -6,25 +6,19 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
-
 import logoAsset from "@/assets/crest-logo.jpeg.asset.json";
 import { Button } from "@/components/ui/button";
-
 const nav = [
   ["Materials", "/products"],
-  ["Collections", "/catalogue"],
   ["Projects", "/projects"],
   ["Match", "/match"],
-  ["Showroom", "/contact"],
   ["Contact", "/contact"],
 ] as const;
-
 type CrestShellProps = {
   children: ReactNode;
   darkHeader?: boolean;
   overlayHeader?: boolean;
 };
-
 export function CrestShell({
   children,
   darkHeader = false,
