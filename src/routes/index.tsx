@@ -95,8 +95,17 @@ const heroStories = [
 function Home() {
   const [active, setActive] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [showCresjiIntro, setShowCresjiIntro] = useState(false);
 
   const story = heroStories[active] ?? heroStories[0];
+
+  useEffect(() => {
+    const entered = new URLSearchParams(window.location.search).get("entered");
+
+    if (entered !== "1") {
+      setShowCresjiIntro(true);
+    }
+  }, []);
 
   useEffect(() => {
     const reducedMotion = window.matchMedia(
@@ -131,8 +140,20 @@ function Home() {
   }
 
   return (
-    <CrestShell darkHeader overlayHeader>
-      <main className="bg-background">
+    <>
+      {showCresjiIntro && (
+        <div className="fixed inset-0 z-[9999] bg-black">
+          <iframe
+            src="/cresji.html"
+            title="CRESJI Intro"
+            className="h-full w-full border-0"
+            allow="autoplay"
+          />
+        </div>
+      )}
+
+      <CrestShell darkHeader overlayHeader>
+        <main className="bg-background">
 
         {/* =====================================================
             PHASE 1 — PREMIUM HERO
@@ -1073,7 +1094,8 @@ function Home() {
           </div>
         </section>
 
-      </main>
-    </CrestShell>
+        </main>
+      </CrestShell>
+    </>
   );
 }
